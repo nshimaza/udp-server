@@ -1,0 +1,47 @@
+name:                udp-server
+version:             0.0.1.0
+github:              "nshimaza/udp-server"
+license:             MIT
+author:              "Naoto Shimazaki"
+maintainer:          "Naoto.Shimazaki@gmail.com"
+copyright:           "2019 Naoto Shimazaki"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/nshimaza/udp-server#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- bytestring
+- containers
+- data-default-class
+- network
+- unliftio
+
+library:
+  source-dirs: src
+  dependencies:
+  - async-supervisor
+
+tests:
+  udp-server-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - udp-server
+    - QuickCheck
+    - quickcheck-instances
+    - hspec
