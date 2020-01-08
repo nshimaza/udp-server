@@ -87,10 +87,5 @@ newWorkerManager msgHandler tout sender svQ inbox = go empty
             Die peer    -> go $ delete peer workers
 
     receiver = timeout tout . receive
-    -- receiver inbox = do
-    --     r <- timeout tout $ receive inbox
-    --     case r of
-    --         Nothing -> throwString "Receive timeout"
-    --         Just bs -> pure bs
 
     monitor peer _ _ = SV.send (Actor inbox) (Die peer)
