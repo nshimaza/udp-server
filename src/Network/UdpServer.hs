@@ -20,7 +20,7 @@ import           Control.Concurrent.Supervisor hiding (send)
 import qualified Control.Concurrent.Supervisor as SV (send)
 
 
-type MessageHandler = IO ByteString -> (ByteString -> IO ()) -> IO ()
+type MessageHandler = IO (Maybe ByteString) -> (ByteString -> IO ()) -> IO ()
 
 data WorkerManagerCommand
     = Msg SockAddr ByteString
@@ -86,10 +86,11 @@ newWorkerManager msgHandler tout sender svQ inbox = go empty
 
             Die peer    -> go $ delete peer workers
 
-    receiver inbox = do
-        r <- timeout tout $ receive inbox
-        case r of
-            Nothing -> throwString "Receive timeout"
-            Just bs -> pure bs
+    receiver = timeout tout . receive
+    -- receiver inbox = do
+    --     r <- timeout tout $ receive inbox
+    --     case r of
+    --         Nothing -> throwString "Receive timeout"
+    --         Just bs -> pure bs
 
     monitor peer _ _ = SV.send (Actor inbox) (Die peer)

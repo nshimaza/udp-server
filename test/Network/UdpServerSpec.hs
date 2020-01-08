@@ -55,7 +55,7 @@ withUdpConnection_ = withUdpConnection >=> \_ -> pure ()
 echoServer :: MessageHandler
 echoServer recv send = go
   where
-    go = (recv >>= send) *> go
+    go = recv >>= maybe (pure ()) (\msg -> send msg *> go)
 
 withEchoServer :: IO () -> IO ()
 withEchoServer = withUdpServer def echoServer
@@ -64,10 +64,13 @@ threadEchoServer :: MessageHandler
 threadEchoServer recv send = go
   where
     go = do
-        msg <- recv
-        tid <- myThreadId
-        send $ C.pack (show tid) <> " " <> msg
-        go
+        maybeMsg <- recv
+        case maybeMsg of
+            Nothing     -> pure ()
+            Just msg    -> do
+                tid <- myThreadId
+                send $ C.pack (show tid) <> " " <> msg
+                go
 
 extractThreadEcho :: S.ByteString -> (String, String, String)
 extractThreadEcho bs = (ws !! 0, ws !! 1, ws !! 2)
@@ -90,8 +93,8 @@ spec = do
             withUdpServer def server $ withUdpConnection_ $ \sk -> do
                 let msg = "hello, world"
                 sendAll sk msg
-                bs <- readMVar marker
-                bs `shouldBe` msg
+                maybeBs <- readMVar marker
+                maybeBs `shouldBe` Just msg
 
     around_ withEchoServer $ around withUdpConnection_ $ do
         describe "UDP echo server" $ do
