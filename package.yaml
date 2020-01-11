@@ -30,7 +30,7 @@ dependencies:
 library:
   source-dirs: src
   dependencies:
-  - async-supervisor
+  - thread-supervisor
 
 tests:
   udp-server-test:
