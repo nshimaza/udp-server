@@ -42,7 +42,7 @@ packages:
 # extra-deps: []
 extra-deps:
 - git: https://github.com/nshimaza/thread-supervisor.git
-  commit: 62c0713fc05ca01a01f7e612aae10334f160e557
+  commit: aeb750bd335f00bd6009ebd28257796831b04d16
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

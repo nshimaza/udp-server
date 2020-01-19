@@ -44,9 +44,9 @@ newUdpServer conf@(UdpServerConfig port tout readyToSend) handler = do
     makeUdpServer sk = do
         (workerSVQ, workerSV) <- newActor newSimpleOneForOneSupervisor
         (managerQ, manager) <- newActor $ newWorkerManager handler tout (\peer bs -> sendAllTo sk bs peer) workerSVQ
-        let workerSVProc    = newProcessSpec Permanent $ noWatch workerSV
-            managerProc     = newProcessSpec Permanent $ noWatch manager
-            receiverProc    = newProcessSpec Permanent $ noWatch $ receiver sk managerQ
+        let workerSVProc    = newChildSpec Permanent workerSV
+            managerProc     = newChildSpec Permanent manager
+            receiverProc    = newChildSpec Permanent $ receiver sk managerQ
         snd =<< newActor (newSupervisor OneForAll def [workerSVProc, managerProc, receiverProc])
 
     receiver sk managerQ = go
@@ -79,7 +79,7 @@ newWorkerManager msgHandler tout sender svQ inbox = go empty
                     Nothing     -> do
                         (newWorkerQ, newWorker) <- newActor $ \inbox ->
                             msgHandler (receiver inbox) (sender peer) `catchAny` \_ -> pure ()
-                        let newWorkerProc = newProcessSpec Temporary $ watch (monitor peer) newWorker
+                        let newWorkerProc = newMonitoredChildSpec Temporary $ watch (monitor peer) newWorker
                         newChild def svQ newWorkerProc
                         SV.send newWorkerQ bs
                         go $ insert peer newWorkerQ workers
