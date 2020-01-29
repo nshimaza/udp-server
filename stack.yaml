@@ -17,7 +17,7 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: nightly-2019-12-29
+resolver: nightly-2020-01-25
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -42,7 +42,7 @@ packages:
 # extra-deps: []
 extra-deps:
 - git: https://github.com/nshimaza/thread-supervisor.git
-  commit: 357b4fd55b4db8bb7078016888c84b2d2b58eb3b
+  commit: 58e8d5927fd2560e60d1c28f91c67bb9425d8970
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
