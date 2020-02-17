@@ -203,7 +203,7 @@ spec = do
 
     around_ withShortTimeoutServer $ around withUdpConnection_ $ do
         describe "UDP server with worker thread timeout" $ do
-            it "stops worker thread when receive timeout happen" $ \sk -> do
+            it "notifies receive timeout to worker thread" $ \sk -> do
                 let msg1 = "hello1"
                 sendAll sk $ C.pack msg1
                 bs1 <- recv sk 0x10000
