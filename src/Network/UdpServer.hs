@@ -88,4 +88,4 @@ newWorkerManager msgHandler tout sender svQ inbox = go empty
 
     receiver = timeout tout . receive
 
-    monitor peer _ _ = SV.send (ActorQ inbox) (Die peer)
+    monitor peer _ _ = sendToMe inbox (Die peer)

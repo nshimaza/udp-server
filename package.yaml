@@ -30,7 +30,7 @@ dependencies:
 library:
   source-dirs: src
   dependencies:
-  - thread-supervisor
+  - thread-supervisor >= 0.2
 
 tests:
   udp-server-test:
@@ -40,6 +40,8 @@ tests:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    build-tools:
+      - hspec-discover
     dependencies:
     - udp-server
     - QuickCheck

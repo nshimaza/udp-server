@@ -1,0 +1,67 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 51e0d947f8314442e71dbf54e8194b52e54a6057ceed07882fdcfc6cc4857983
+
+name:           udp-server
+version:        0.0.1.0
+description:    Please see the README on GitHub at <https://github.com/nshimaza/udp-server#readme>
+homepage:       https://github.com/nshimaza/udp-server#readme
+bug-reports:    https://github.com/nshimaza/udp-server/issues
+author:         Naoto Shimazaki
+maintainer:     Naoto.Shimazaki@gmail.com
+copyright:      2019 Naoto Shimazaki
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/nshimaza/udp-server
+
+library
+  exposed-modules:
+      Network.UdpServer
+  other-modules:
+      Paths_udp_server
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , containers
+    , data-default-class
+    , network
+    , thread-supervisor >=0.2
+    , unliftio
+  default-language: Haskell2010
+
+test-suite udp-server-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Network.UdpServerSpec
+      Paths_udp_server
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+      hspec-discover:hspec-discover
+  build-depends:
+      QuickCheck
+    , base >=4.7 && <5
+    , bytestring
+    , containers
+    , data-default-class
+    , hspec
+    , network
+    , quickcheck-instances
+    , udp-server
+    , unliftio
+  default-language: Haskell2010
