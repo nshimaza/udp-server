@@ -27,9 +27,8 @@ jobs:
       uses: actions/cache@v2.1.0
       with:
         path: |
-          ~/.stack
-          !~/.stack/setup-exe-cache/
-        key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}-v6
+          ~/.stack/pantry
+        key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}-v7
 
     - name: Build
       run: stack build --system-ghc --test --bench --no-run-tests --no-run-benchmarks
