@@ -32,8 +32,10 @@ jobs:
           !~/.stack/setup-exe-src
         key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}-v10
 
-    - name: Build
+    - name: Delete setup-exe-cache
       run: rm -fr ~/.stack/setup-exe-cache ~/.stack/setup-exe-src
+
+    - name: Build
       run: stack build --system-ghc --test --bench --no-run-tests --no-run-benchmarks
     - name: Run tests
       run: stack test --system-ghc
