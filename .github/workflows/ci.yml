@@ -26,7 +26,9 @@ jobs:
     - name: Cache
       uses: actions/cache@v2.1.0
       with:
-        path: ~/.stack
+        path: |
+          ~/.stack
+          !~/.stack/setup-exe-cache/
         key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}-v5
 
     - name: Build
