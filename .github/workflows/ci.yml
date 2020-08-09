@@ -30,9 +30,10 @@ jobs:
           ~/.stack
           !~/.stack/setup-exe-cache
           !~/.stack/setup-exe-src
-        key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}-v9
+        key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}-v10
 
     - name: Build
+      run: rm -fr ~/.stack/setup-exe-cache ~/.stack/setup-exe-src
       run: stack build --system-ghc --test --bench --no-run-tests --no-run-benchmarks
     - name: Run tests
       run: stack test --system-ghc
