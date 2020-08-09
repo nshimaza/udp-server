@@ -23,12 +23,6 @@ jobs:
         enable-stack: true
         stack-version: 'latest'
 
-    - name: Cache
-      uses: actions/cache@v2
-      with:
-        path: ~/.stack
-        key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}
-
     - name: Build
       run: stack build --test --bench --no-run-tests --no-run-benchmarks
     - name: Run tests
