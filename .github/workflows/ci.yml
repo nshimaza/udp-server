@@ -26,10 +26,8 @@ jobs:
     - name: Cache
       uses: actions/cache@v2.1.0
       with:
-        path: |
-          ~/.stack
-          .stack-work
-        key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}-v3
+        path: ~/.stack
+        key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}-v4
 
     - name: Build
       run: stack build --test --bench --no-run-tests --no-run-benchmarks
