@@ -31,7 +31,7 @@ jobs:
         key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}-v11
 
     - name: Delete setup-exe-cache
-      if: ${{ runner.os == macOS }}
+      if: ${{ runner.os == 'macOS' }}
       run: rm -fr ~/.stack/setup-exe-cache ~/.stack/setup-exe-src
 
     - name: Build
