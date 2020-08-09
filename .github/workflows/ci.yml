@@ -29,7 +29,7 @@ jobs:
         path: |
           ~/.stack
           !~/.stack/setup-exe-cache/
-        key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}-v5
+        key: ${{ runner.os }}-${{ hashFiles('**/*.cabal', '**/*.yaml', '**/stack.yaml.lock') }}-v6
 
     - name: Build
       run: stack build --system-ghc --test --bench --no-run-tests --no-run-benchmarks
