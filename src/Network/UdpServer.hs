@@ -5,14 +5,11 @@ module Network.UdpServer where
 import           Data.ByteString               (ByteString)
 import           Data.Default.Class
 
-import           Data.Map.Strict               (Map, delete, empty, insert,
-                                                (!?))
+import           Data.Map.Strict               (delete, empty, insert, (!?))
 import           Network.Socket                (Family (..), PortNumber,
-                                                SockAddr (..), Socket,
-                                                SocketOption (..),
-                                                SocketType (..), bind, close,
-                                                defaultProtocol,
-                                                setSocketOption, socket)
+                                                SockAddr (..), SocketType (..),
+                                                bind, close, defaultProtocol,
+                                                socket, socketPort)
 import           Network.Socket.ByteString     (recvFrom, sendAllTo)
 import           UnliftIO
 
@@ -29,21 +26,21 @@ data WorkerManagerCommand
 data UdpServerConfig = UdpServerConfig
     { udpServerConfigPort           :: PortNumber
     , udpServerConfigTimeout        :: Int
-    , udpServerConfigBeforeMainLoop :: IO ()
+    , udpServerConfigBeforeMainLoop :: PortNumber -> IO ()
     }
 
 instance Default UdpServerConfig where
-    def = UdpServerConfig 9000 5000000 (pure ())
+    def = UdpServerConfig 0 5000000 (\_ -> pure ())
 
 newUdpServer :: UdpServerConfig -> MessageHandler -> IO ()
-newUdpServer conf@(UdpServerConfig port tout readyToSend) handler = do
+newUdpServer (UdpServerConfig port tout readyToSend) handler = do
     bracket newSocket close $ \sk -> do
-        readyToSend
+        socketPort sk >>= readyToSend
         makeUdpServer sk
   where
     makeUdpServer sk = do
         Actor workerSVQ workerSV <- newActor newSimpleOneForOneSupervisor
-        Actor managerQ manager <- newActor $ newWorkerManager handler tout (\peer bs -> sendAllTo sk bs peer) workerSVQ
+        Actor managerQ manager <- newActor $ newWorkerManager handler tout (flip $ sendAllTo sk) workerSVQ
         let workerSVProc    = newChildSpec Permanent workerSV
             managerProc     = newChildSpec Permanent manager
             receiverProc    = newChildSpec Permanent $ receiver sk managerQ
@@ -77,10 +74,10 @@ newWorkerManager msgHandler tout sender svQ inbox = go empty
                     Just workerQ -> SV.send workerQ bs *> go workers
 
                     Nothing     -> do
-                        Actor newWorkerQ newWorker <- newActor $ \inbox ->
-                            msgHandler (receiver inbox) (sender peer) `catchAny` \_ -> pure ()
+                        Actor newWorkerQ newWorker <- newActor $ \workerInbox ->
+                            msgHandler (receiver workerInbox) (sender peer) `catchAny` \_ -> pure ()
                         let newWorkerProc = newMonitoredChildSpec Temporary $ watch (monitor peer) newWorker
-                        newChild def svQ newWorkerProc
+                        _ <- newChild def svQ newWorkerProc
                         SV.send newWorkerQ bs
                         go $ insert peer newWorkerQ workers
 

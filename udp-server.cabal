@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 51e0d947f8314442e71dbf54e8194b52e54a6057ceed07882fdcfc6cc4857983
+-- hash: f6ff038615c30fa81378f4f61b1abfd0dd07c62e8bd027e24d557ec0d5548895
 
 name:           udp-server
 version:        0.0.1.0
@@ -13,7 +13,7 @@ homepage:       https://github.com/nshimaza/udp-server#readme
 bug-reports:    https://github.com/nshimaza/udp-server/issues
 author:         Naoto Shimazaki
 maintainer:     Naoto.Shimazaki@gmail.com
-copyright:      2019 Naoto Shimazaki
+copyright:      2019-2020 Naoto Shimazaki
 license:        MIT
 license-file:   LICENSE
 build-type:     Simple
@@ -32,6 +32,7 @@ library
       Paths_udp_server
   hs-source-dirs:
       src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
     , bytestring
@@ -50,7 +51,7 @@ test-suite udp-server-test
       Paths_udp_server
   hs-source-dirs:
       test
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -Wno-incomplete-uni-patterns -Wno-missing-signatures -Wno-type-defaults -threaded -rtsopts -with-rtsopts=-N
   build-tool-depends:
       hspec-discover:hspec-discover
   build-depends:
